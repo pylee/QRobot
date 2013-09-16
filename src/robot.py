@@ -12,17 +12,18 @@ def run():
    
     while True:
         now = time.strftime('%M%S',time.localtime(time.time()))
+        hour = time.strftime('%H',time.localtime(time.time()))
 
-        #整点检查
-        if now == '0959':
+        #整点检查,相应小时的11分，运行
+        if now == '1111'and hour in (7, 11, 12, 17, 18, 21, 23):
             monitor_info = ""
             if random.choice(range(3)):
-                monitor_info += monitor.monitor_http()
-            else:
                 monitor_info += monitor.monitor_cpu_temp()
+            else:
+                monitor_info += monitor.monitor_http()
 
             greeting = ""
-            greeting += greet.hello()
+            greeting += greet.hello(hour)
             myPic = loadpic.pic()
             
             if random.choice(range(4)):
