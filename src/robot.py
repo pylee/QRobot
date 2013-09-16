@@ -14,7 +14,7 @@ def run():
         now = time.strftime('%M%S',time.localtime(time.time()))
 
         #整点检查
-        if now == '2520':
+        if now == '4140':
             monitor_info = ""
             #random.choice(range(3))
             monitor_info += monitor.monitor_http()
@@ -24,9 +24,10 @@ def run():
             greeting += greet.hello()
             myPic = loadpic.pic()
             
-            random.choice(range(4)) and \
-            content = '%s' %(greeting) or \
-            content = '%s%s' %(greeting, monitor_info)
+            if random.choice(range(4)):
+                content = '%s' %(greeting)
+            else:
+                content = '%s%s' %(greeting, monitor_info)
             try:
                 #随机选择发图或者不发图,1/4可能性发图
                 random.choice(range(4)) and \
