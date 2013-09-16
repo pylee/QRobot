@@ -14,11 +14,12 @@ def run():
         now = time.strftime('%M%S',time.localtime(time.time()))
 
         #整点检查
-        if now == '4140':
+        if now == '0959':
             monitor_info = ""
-            #random.choice(range(3))
-            monitor_info += monitor.monitor_http()
-            #monitor_info += monitor.monitor_temp()
+            if random.choice(range(3)):
+                monitor_info += monitor.monitor_http()
+            else:
+                monitor_info += monitor.monitor_cpu_temp()
 
             greeting = ""
             greeting += greet.hello()
@@ -30,13 +31,14 @@ def run():
                 content = '%s%s' %(greeting, monitor_info)
             try:
                 #随机选择发图或者不发图,1/4可能性发图
-                random.choice(range(4)) and \
-                client.statuses.update.post(status=content) or \
-                client.statuses.upload.post(status=content, pic = myPic)
-                
+                if random.choice(range(4)):
+                    client.statuses.update.post(status=content)
+                else:
+                    client.statuses.upload.post(status=content, pic = myPic)                
             except:
                 pass 
             myPic.close()
+
             print "Send succesfully!"
             time.sleep(1)
 
