@@ -14,13 +14,27 @@ def run():
         now = time.strftime('%M%S',time.localtime(time.time()))
         hour = time.strftime('%H',time.localtime(time.time()))
 
+        #由于weibo API限制，不能发布自己可见微博，所以我设置了一个密友可见，密友就是我自己的另外一个账号，用来监控cpu温度和运行时间
+        if now == '4400':
+            print "sending a monitor weibo"
+            monitor_info = monitor.monitor_cpu_temp()
+            monitor_info += monitor.monitor_runtime()
+            monitor_info += monitor.monitor_http()
+            try:
+                client.statuses.update.post(status=monitor_info, visible = 2)
+            except:
+                pass
+
         #整点检查,相应小时的11分，运行
-        if now == '1111'and hour in (7, 11, 12, 17, 18, 21, 23):
+        if now == '4410' and hour in ['07', '09', '10', '12', '17', '18', '21', '22','23']:
+            print 'sending a normal weibo'
             monitor_info = ""
-            if random.choice(range(3)):
+            if random.choice(range(2)):
                 monitor_info += monitor.monitor_cpu_temp()
-            else:
+            elif random.choice(range(2)):
                 monitor_info += monitor.monitor_http()
+            else:
+                monitor_info += monitor.monitor_runtime()
 
             greeting = ""
             greeting += greet.hello(hour)
