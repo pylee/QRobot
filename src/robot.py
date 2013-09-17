@@ -9,7 +9,7 @@ from tools import loadpic
 
 def run():
     client = login.login()
-    lastid = 0
+    lastid = 3623583605751412
     inter = 100 #检查间隔
 
    
@@ -29,8 +29,14 @@ def run():
             except:
                 pass
 
+            log = "Send a monitor weibo succesfully! 时分秒：%s%s \n" %(hour,now)
+            print log
+            f = open('log.txt', 'a')
+            f.write(log)
+            f.close()
+
         #发微
-        if now == '4600' and hour in ['07', '12', '11', '17','18', '22','23']:
+        if now == '4600' and hour in ['07', '12', '11', '17','18', '19','22','23']:
             print 'sending a normal weibo'
             monitor_info = ""
             if random.choice(range(2)):
@@ -49,16 +55,21 @@ def run():
             else:
                 content = '%s%s' %(greeting, monitor_info)
             try:
-                #随机选择发图或者不发图,1/3可能性发图
-                if random.choice(range(3)):
+                #随机选择发图或者不发图,1/2可能性发图
+                if random.choice(range(2)):
                     client.statuses.update.post(status=content)
                 else:
                     client.statuses.upload.post(status=content, pic = myPic)                
             except:
                 pass 
             myPic.close()
+            
+            log = "Send a normal weibo succesfully! 时分秒：%d%d \n" %(hour,now)
+            print log
+            f = open('log.txt\n', 'a')
+            f.write(log)
+            f.close()
 
-            print "Send succesfully!"
             time.sleep(1)
 
         #对最新 @我 的原创微博进行评论,50s一次
@@ -69,12 +80,23 @@ def run():
                 for weiboInfo in mentions['statuses']:
                     lastid = weiboInfo['id']
                     print lastid
-                    myComment = greet.getComment() #取得秦皇岛天气
+                    myComment = ""
+                    if random.choice(range(2)):
+                        myComment = greet.comment()
+                    else:
+                        location = weiboInfo['user']['location']
+                        myComment = '~~' + greet.getLocationWeather(location.encode('utf-8')) #取得天气
+                        
+
                     client.comments.create.post(id = lastid, comment = myComment)
-                    print 'comment successfully! id:%d comment:%s' %(lastid, myComment)
+                    log = 'comment successfully! id:%d comment:%s \n' %(lastid, myComment)
+                    print log
+                    f = open('log.txt', 'a')
+                    f.write(log)
+                    f.close()
             except Exception, e:
+                print 'error~~'
                 print e
-                pass
             inter = 0
 
         time.sleep(1)
