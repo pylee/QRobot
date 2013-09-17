@@ -31,7 +31,7 @@ def monitor_runtime():
     uptime['second'] = int(all_sec % MINUTE)
     uptime['allminute']= int(all_sec / MINUTE)
     uptime['Free rate'] = float(con[1]) / float(con[0])
-    runtime = '小语已经工作了%d天%d小时%d分' % (uptime['day'], uptime['hour'], uptime['minute'])
+    runtime = '小语已经工作了%d天%d小时%d分。' % (uptime['day'], uptime['hour'], uptime['minute'])
     return runtime
     
 
