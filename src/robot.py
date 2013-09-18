@@ -12,13 +12,36 @@ def storeLog(log):
     f.close()
 
 #防止重复评论
-def loadLastId():
-    return 3623804545092101
+def loadLastId(isPost = True):    
+    f = open('lastid.txt', 'r')
+    lastids = f.read().split()
+    lastid = lastids[0]
+    #如果是评论某条微博时艾特我的
+    if not isPost:
+        lastid = lastids[1] #那么就读取第二个数，即上次评论的id
+    f.close()
+    return int(lastid)
+
+def storeLastId(lastid, isPost = True):
+    f = open('lastid.txt', 'r')
+    lastids = f.read().split()
+    f.close()
+
+    f = open('lastid.txt', 'w')
+    if isPost:
+        f.write(str(lastid) + " ")
+        f.write(lastids[1])
+    else:
+        #如果是评论某条微博时艾特我的
+        f.write(lastids[0] + " ")
+        f.write(str(lastid))
+    f.close()
+
 
 def run():
     client = login.login()
     lastid = loadLastId()
-    inter = 100 #检查间隔
+    inter = 50 #检查间隔
 
    
     while True:
@@ -78,14 +101,19 @@ def run():
 
                 time.sleep(1)
 
-            #对最新 @我 的原创微博进行评论,50s一次
+            #对最新 @我 的进行回复,50s一次，包括评论原创微博，回复评论
             if inter > 50:
-                try:
+                try:                    
+                    #对最新 @我 的原创微博进行评论#
+
                     #获取原创的最新微博的id
+                    lastid = loadLastId()
                     mentions = client.statuses.mentions.get(since_id = lastid, filter_by_type = 1)
                     for weiboInfo in mentions['statuses']:
                         lastid = weiboInfo['id']
                         print lastid
+                        storeLastId(lastid)
+
                         myComment = ""
                         if random.choice(range(2)):
                             myComment = greet.comment()
@@ -98,12 +126,34 @@ def run():
                         log = 'send a comment successfully! 时分秒：%s%sid:%d comment:%s \n' %(hour, now, lastid, myComment)
                         print log
                         storeLog(log)
+
+                    #对最新 @我 的评论进行回复#
+                    lastCommentid = loadLastId(False)
+                    mentions = client.comments.mentions.get(since_id = lastCommentid)
+                    for weiboInfo in mentions['comments']:
+                        lastCommentid = weiboInfo['id'] #评论的id
+                        lastPostId = weiboInfo['status']['id'] #微博的id
+                        print "评论的id：%d 微博的id：%d" % (lastCommentid,lastPostId)
+                        storeLastId(lastCommentid, False)
+
+                        myComment = greet.comment()                       
+
+                        client.comments.reply.post(id = lastPostId, cid = lastCommentid, comment = myComment)
+                        log = 'replay a comment successfully! 时分秒：%s%s id:%d comment:%s \n' %(hour, now, lastid, myComment)
+                        print log
+                        storeLog(log)
+
                 except Exception, e:
                     print e
 
                 inter = 0
 
+
+
+
             time.sleep(1)#while循环每次间隔一秒
+
+
 
         except Exception, e:
             print e
