@@ -38,6 +38,7 @@ def hello(hour):
 def getLocationWeather(location):
 	location = (location.split())[-1]
 
+	#myfile = open('../../res/weather.txt','r')
 	myfile = open('../res/weather.txt','r')
 	str = myfile.read() #读取的文件为utf-8编码
 	tuples = re.findall(ur"([\u4e00-\u9fa5]+):(\d+)", str.decode('utf-8'))  #将utf-8编码解码成unicode
@@ -54,7 +55,12 @@ def getLocationWeather(location):
 	weatherInfo = weatherJSON['weatherinfo']
 
 	#注意，这里从网上抓的数据返回的是unicode类型的字符串，要把它转化成urf-8
-	weather = "今天"+ weatherInfo['city'].encode('utf-8') +"的温度为" + weatherInfo['temp1'].encode('utf-8') + "，" + weatherInfo['weather1'].encode('utf-8')+"。"
+	weather =   "今天%s的温度为%s,%s,%s,%s" \
+				%(weatherInfo['city'].encode('utf-8'), 
+				weatherInfo['temp1'].encode('utf-8'),
+				weatherInfo['weather1'].encode('utf-8'),
+				weatherInfo['wind1'].encode('utf-8'),
+				weatherInfo['index_d'].encode('utf-8'))
 	return weather
 
 #print getLocationWeather("房山区")

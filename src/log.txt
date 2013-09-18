@@ -2,3 +2,7 @@
 comment successfully! id:3623595840181803 comment:~~今天秦皇岛的温度为18℃~23℃，阴转小雨。 
 comment successfully! id:3623595840181803 comment:唉，没事@东秦小语，艾特艾特咒语~~
  
+Send a monitor weibo succesfully! 时分秒：220430 
+comment successfully! id:3623804545092101 comment:~~今天济南的温度为32℃~19℃，晴。 
+Send a monitor weibo succesfully! 时分秒：090430 
+Send a monitor weibo succesfully! 时分秒：100430 
