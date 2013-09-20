@@ -42,13 +42,16 @@ def run():
     client = login.login()
     lastid = loadLastId()
     inter = 50 #检查间隔
-
    
     while True:
         try:
             inter += 1 #加1秒
             now = time.strftime('%M%S',time.localtime(time.time()))
             hour = time.strftime('%H',time.localtime(time.time()))
+
+            #每天凌晨1点重新授权
+            if hour == '01' and now == '0000':
+                break
 
             #由于weibo API限制，不能发布自己可见微博，所以我设置了一个密友可见，密友就是我自己的另外一个账号，用来监控cpu温度和运行时间
             if now == '0430':
@@ -158,8 +161,6 @@ def run():
         except Exception, e:
             print e
             
-
-
-
 if __name__=="__main__":
-    run()
+    while True:
+        run()

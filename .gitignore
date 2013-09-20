@@ -37,3 +37,7 @@ nosetests.xml
 .pyc
 #避免key和微博账号外泄
 myConfig.py
+
+#将log更新剔除
+log.txt
+lastid.txt
