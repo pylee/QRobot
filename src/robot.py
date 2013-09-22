@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 import random
+import shelve
 from tools import login
 from tools import greet
 from tools import monitor
@@ -13,35 +14,35 @@ def storeLog(log):
 
 #防止重复评论
 def loadLastId(isPost = True):    
-    f = open('lastid.txt', 'r')
-    lastids = f.read().split()
-    lastid = lastids[0]
-    #如果是评论某条微博时艾特我的
-    if not isPost:
-        lastid = lastids[1] #那么就读取第二个数，即上次评论的id
-    f.close()
-    return int(lastid)
+    database = shelve.open("id.dat")
+    if(isPost):
+        try:
+             return database['lastidPost']
+        except:
+            return 3623934551198704 
+    else:
+        try:
+            return database['lastidReply']
+        except:
+            return 3624611847141810
+    database.close()
 
 def storeLastId(lastid, isPost = True):
-    f = open('lastid.txt', 'r')
-    lastids = f.read().split()
-    f.close()
-
-    f = open('lastid.txt', 'w')
-    if isPost:
-        f.write(str(lastid) + " ")
-        f.write(lastids[1])
+    database = shelve.open("id.dat")
+    if(isPost):
+        database['lastidPost'] = lastid
     else:
-        #如果是评论某条微博时艾特我的
-        f.write(lastids[0] + " ")
-        f.write(str(lastid))
-    f.close()
+        database['lastidReply'] = lastid
+    database.close()
+
+
 
 
 def run():
     client = login.login()
     lastid = loadLastId()
     inter = 50 #检查间隔
+
    
     while True:
         try:
