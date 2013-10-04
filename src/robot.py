@@ -68,6 +68,20 @@ def run():
                 print log
                 storeLog(log)
 
+            #每天6点发布秦皇岛天气预报
+            if now == '0600':
+                print "sending a wether weibo..."
+                wether_info = greet.getLocationWeather("河北 秦皇岛")
+                try:
+                    client.statuses.update.post(status=wether_info)
+                except:
+                    pass
+
+                log = "Send a wether weibo succesfully! 时分秒：%s%s \n" %(hour,now)
+                print log
+                storeLog(log)
+
+
             #发微
             if now == '4600' and hour in ['07', '12', '11', '17','18', '19','22','23']:
                 print 'sending a normal weibo'
