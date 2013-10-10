@@ -55,7 +55,7 @@ def run():
                 break
 
             #由于weibo API限制，不能发布自己可见微博，所以我设置了一个密友可见，密友就是我自己的另外一个账号，用来监控cpu温度和运行时间
-            if now == '0430':
+            if hour == '00' and now == '0000':
                 print "sending a monitor weibo"
                 monitor_info = monitor.monitor_cpu_temp()
                 monitor_info += monitor.monitor_runtime()
@@ -70,7 +70,7 @@ def run():
                 storeLog(log)
 
             #每天6点发布秦皇岛天气预报
-            if now == '0600':
+            if hour == '06' and now == '0000':
                 print "sending a wether weibo..."
                 wether_info = greet.getLocationWeather("河北 秦皇岛")
                 try:
